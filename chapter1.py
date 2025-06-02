@@ -39,10 +39,8 @@ output sequence (5'-3'): CTGCTACGAT
 
 COMPLEMENT = str.maketrans("ACGT", "TGCA")
 
-with open("problems/rosalind_revc.txt", 'r') as f:
-    seq = f.read().strip()
-    assert(utils.validateSeq(seq))
-    seq = seq.translate(COMPLEMENT)[::-1]
+seq = utils.readSeqFromFile("problems/rosalind_revc.txt")
+seq = seq.translate(COMPLEMENT)[::-1]
 
 print(seq)
 
