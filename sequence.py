@@ -11,8 +11,7 @@ class SeqType(Enum):
     RNA = 'r'
 
 class Sequence(str):
-    def __init__(self, type=SeqType.DNA):
-        self.type = type
+    def __init__(self, seq, type=SeqType.DNA):
         match type:
             case SeqType.DNA:
                 allowed = allowedDnaNeucleotides
@@ -22,14 +21,19 @@ class Sequence(str):
             case _:
                 raise Exception()
 
+        self.type = type
+
         for base in self:
             if base not in allowed:
                 raise Exception()
+
+        self = seq
 
     def complemented(self) -> Self:
         return self.translate(complementTable)[::-1]
 
     def transcribed(self) -> Self:
         assert(self.type == SeqType.DNA)
-        self.type = SeqType.RNA
-        return self.replace('T', 'U')
+        new = self.replace('T', 'U')
+        new.type = SeqType.RNA
+        return new
