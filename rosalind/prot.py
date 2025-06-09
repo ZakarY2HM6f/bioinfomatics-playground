@@ -1,4 +1,7 @@
-import utils
+from __init__ import *
 
-data = utils.readFile(utils.dataPath())
-print(data)
+data = readFile()
+seq = RNASeq(data)
+seq = seq.translated()
+
+print(seq[:-1])
