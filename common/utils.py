@@ -1,14 +1,21 @@
 import random
+from pathlib import Path
 import __main__
 
 def randomSeq(length=50) -> str:
     return ''.join([random.choice("ACGT") for _ in range(0, length)])
 
-def readFile(path: str) -> str:
+def readFile(path: str | None = None) -> str:
+    if not path:
+        path = getDataPath()
+
     with open(path, 'r') as f:
         return f.read().strip().upper()
 
-def readFasta(path: str) -> dict[str, str]:
+def readFasta(path: str | None = None) -> dict[str, str]:
+    if not path:
+        path = getDataPath()
+
     with open(path, 'r') as f:
         lines = f.readlines()
 
@@ -25,6 +32,6 @@ def readFasta(path: str) -> dict[str, str]:
 
     return result
 
-def dataPath() -> str:
-    name = __main__.__file__.split('.')[0]
+def getDataPath() -> str:
+    name = Path(__main__.__file__).stem
     return f"problems/rosalind_{name}.txt" 

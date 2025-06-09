@@ -3,7 +3,7 @@ from enum import Enum
 
 allowedDnaNeucleotides = "ATCG"
 allowedRnaNeucleotides = "AUCG"
-allowedProteins = "ACDEFGHIKLMNPQRSTVWY_"
+allowedAminoAcids = "ACDEFGHIKLMNPQRSTVWY_"
 
 dnaComplementTable = str.maketrans("ACGT", "TGCA")
 rnaComplementTable = str.maketrans("ACGU", "UGCA")
@@ -42,7 +42,7 @@ rnaCodons = {
     "UAU": "Y", "UAC": "Y",
     "UAA": "_", "UAG": "_", "UGA": "_",
     "UGU": "C", "UGC": "C",
-    "UGG": "w",
+    "UGG": "W",
     "CCU": "P", "CCC": "P", "CCA": "P", "CCG": "P",
     "CAU": "H", "CAC": "H",
     "CAA": "Q", "CAG": "Q",
@@ -57,14 +57,14 @@ rnaCodons = {
 }
 
 RNASeq = NewType("RNASeq", None)
-ProSeq = NewType("ProSeq", None)
+AASeq = NewType("AASeq", None)
 
 class BaseSeq(str):
     pass
 
 class DNASeq(BaseSeq):
-    def __new__(cls, seq: str | Iterable[str], safe=False):
-        if isinstance(str, Iterable):
+    def __new__(cls, seq: str | list[str], safe=False) -> Self:
+        if isinstance(str, list):
             seq = ''.join(seq)
             
         if not safe:
@@ -81,13 +81,13 @@ class DNASeq(BaseSeq):
     def transcribed(self) -> RNASeq:
         return RNASeq(self.replace('T', 'U'), True)
     
-    def translated(self) -> ProSeq:
-        return ProSeq([dnaCondons[self[i*3:i*3+3]] for i in range(0, len(self) // 3)], True)
+    def translated(self) -> AASeq:
+        return AASeq([dnaCondons[self[i*3:i*3+3]] for i in range(0, len(self) // 3)], True)
 
     
 class RNASeq(BaseSeq):
-    def __new__(cls, seq: str | Iterable[str], safe=False):
-        if isinstance(str, Iterable):
+    def __new__(cls, seq: str | list[str], safe=False) -> Self:
+        if isinstance(str, list):
             seq = ''.join(seq)
 
         if not safe:
@@ -100,15 +100,18 @@ class RNASeq(BaseSeq):
 
     def complemented(self) -> Self:
         return RNASeq(self.translate(rnaComplementTable)[::-1], True)
+    
+    def translated(self) -> AASeq:
+        return AASeq([rnaCodons[self[i*3:i*3+3]] for i in range(0, len(self) // 3)], True)
 
-class ProSeq(BaseSeq):
-    def __new__(cls, seq: str | Iterable[str], safe=False):
-        if isinstance(str, Iterable):
+class AASeq(BaseSeq):
+    def __new__(cls, seq: str | list[str], safe=False) -> Self:
+        if isinstance(seq, list):
             seq = ''.join(seq)
 
         if not safe:
             for ch in seq:
-                if ch not in allowedProteins:
+                if ch not in allowedAminoAcids:
                     raise Exception(f"Invalid character '{ch}' in sequence")
 
         instance = super().__new__(cls, seq)
