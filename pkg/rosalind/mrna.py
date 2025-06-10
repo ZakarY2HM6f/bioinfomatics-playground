@@ -8,7 +8,7 @@ def main():
         else:
             codonPerAA[aa] = 1
     
-    seq = readFile(getDataPath(__file__))
+    seq = readFile(getProblemPath(__file__))
 
     p = codonPerAA['_']
     for aa in seq:

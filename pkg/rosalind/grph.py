@@ -3,7 +3,7 @@ from ..common.utils import *
 k = 3
 
 def main():
-    data = readFasta(getDataPath(__file__))
+    data = readFasta(getProblemPath(__file__))
     graph = []
 
     for i1, s in data.items():
