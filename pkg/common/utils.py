@@ -18,6 +18,8 @@ def readFasta(path: str) -> dict[str, str]:
 
     for line in lines:
         line = line.strip()
+        if len(line) == 0:
+            continue
         if line[0] == '>':
             current = line[1:]
             result[current] = ''
@@ -26,7 +28,7 @@ def readFasta(path: str) -> dict[str, str]:
 
     return result
 
-def getDataPath(file: str) -> str:
+def getProblemPath(file: str) -> str:
     name = Path(file).stem
     return f"pkg/rosalind/problems/rosalind_{name}.txt" 
 
