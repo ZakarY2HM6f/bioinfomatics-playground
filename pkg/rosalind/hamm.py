@@ -6,7 +6,7 @@ assert(len(data[0]) == len(data[1]))
 
 distance = 0
 
-for i in range(0, len(data[0])):
+for i in range(len(data[0])):
     if data[0][i] != data[1][i]:
         distance += 1
 

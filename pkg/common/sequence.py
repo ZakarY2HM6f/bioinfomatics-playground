@@ -3,7 +3,7 @@ from enum import Enum
 
 allowedDnaNeucleotides = "ATCG"
 allowedRnaNeucleotides = "AUCG"
-allowedAminoAcids = "ACDEFGHIKLMNPQRSTVWY_"
+allowedAminoAcids = "ACDEFGHIKLMNPQRSTVWY"
 
 dnaComplementTable = str.maketrans("ACGT", "TGCA")
 rnaComplementTable = str.maketrans("ACGU", "UGCA")
@@ -82,8 +82,7 @@ class DNASeq(BaseSeq):
         return RNASeq(self.replace('T', 'U'), True)
     
     def translated(self) -> AASeq:
-        return AASeq([dnaCondons[self[i*3:i*3+3]] for i in range(0, len(self) // 3)], True)
-
+        return AASeq([dnaCondons[self[i*3:i*3+3]] for i in range(len(self) // 3)], True)
     
 class RNASeq(BaseSeq):
     def __new__(cls, seq: str | list[str], safe=False) -> Self:
@@ -102,17 +101,27 @@ class RNASeq(BaseSeq):
         return RNASeq(self.translate(rnaComplementTable)[::-1], True)
     
     def translated(self) -> AASeq:
-        return AASeq([rnaCodons[self[i*3:i*3+3]] for i in range(0, len(self) // 3)], True)
+        return AASeq([rnaCodons[self[i*3:i*3+3]] for i in range(len(self) // 3)], True)
 
 class AASeq(BaseSeq):
-    def __new__(cls, seq: str | list[str], safe=False) -> Self:
+    _singular: bool
+
+    def __new__(cls, seq: str | list[str], safe=False, singular=False) -> Self:
         if isinstance(seq, list):
             seq = ''.join(seq)
 
         if not safe:
+            singular = seq[0] == 'M'
             for ch in seq:
                 if ch not in allowedAminoAcids:
+                    if ch == '_':
+                        singular = False
+                        continue
                     raise Exception(f"Invalid character '{ch}' in sequence")
 
         instance = super().__new__(cls, seq)
+        instance._singular = singular
         return instance
+    
+    def isSingular(self) -> bool:
+        return self._singular

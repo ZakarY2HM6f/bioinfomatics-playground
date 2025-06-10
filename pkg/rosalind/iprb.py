@@ -1,6 +1,6 @@
 import math
 
-with open('problems/rosalind_iprb.txt', 'r') as f:
+with open('pkg/rosalind/problems/rosalind_iprb.txt', 'r') as f:
     data = f.read().strip().split(' ')
 
 assert(len(data) == 3)

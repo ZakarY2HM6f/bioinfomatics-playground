@@ -9,7 +9,7 @@ initPair = 1
 
 lastPair = initPair
 currPair = initPair
-for _ in range(0, n - 2):
+for _ in range(n - 2):
     tmp = lastPair * k + currPair
     lastPair = currPair
     currPair = tmp
