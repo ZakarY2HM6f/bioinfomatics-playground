@@ -11,7 +11,7 @@ def genReadingFrames(seq: DNASeq | RNASeq) -> list[AASeq]:
     r3 = Seq(qes[2:], True).translated()
     return [f1, f2, f3, r1, r2, r3]
 
-def findProtein(seq: AASeq) -> list[AASeq]:
+def findProteins(seq: AASeq) -> list[AASeq]:
     currents = []
     proteins = []
     for aa in seq:

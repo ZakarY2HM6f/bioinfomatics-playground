@@ -1,5 +1,6 @@
 import random
 from pathlib import Path
+from collections import OrderedDict
 from pyperclip import copy
 
 def randomSeq(length=50) -> str:
@@ -9,11 +10,11 @@ def readFile(path: str) -> str:
     with open(path, 'r') as f:
         return f.read().strip().upper()
 
-def readFasta(path: str) -> dict[str, str]:
+def readFasta(path: str) -> OrderedDict[str, str]:
     with open(path, 'r') as f:
         lines = f.readlines()
 
-    result = {}
+    result = OrderedDict()
     current = ''
 
     for line in lines:
@@ -34,11 +35,12 @@ def getProblemPath(file: str) -> str:
 
 _result = ''
 
-def rprint(msg):
+def rprint(*msg, end='\n'):
     global _result
-    _result += str(msg)
-    _result += '\n'
-    print(msg)
+    for m in msg:
+        _result += str(m)
+    _result += end if end else ''
+    print(*msg, end=end)
 
 def copyResult():
     global _result
