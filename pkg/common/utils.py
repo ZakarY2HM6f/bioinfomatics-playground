@@ -10,12 +10,11 @@ def readFile(path: str) -> str:
     with open(path, 'r') as f:
         return f.read().strip().upper()
 
-def readFasta(path: str) -> OrderedDict[str, str]:
-    with open(path, 'r') as f:
-        lines = f.readlines()
+def parseFasta(s: str) -> OrderedDict[str, str]:
+    lines = s.splitlines()
 
     result = OrderedDict()
-    current = ''
+    current = None
 
     for line in lines:
         line = line.strip()
@@ -29,6 +28,10 @@ def readFasta(path: str) -> OrderedDict[str, str]:
 
     return result
 
+def readFasta(path: str) -> OrderedDict[str, str]:
+    with open(path, 'r') as f:
+        return parseFasta(f.read())
+
 def getProblemPath(file: str) -> str:
     name = Path(file).stem
     return f"pkg/rosalind/problems/rosalind_{name}.txt" 
@@ -37,8 +40,7 @@ _result = ''
 
 def rprint(*msg, end='\n'):
     global _result
-    for m in msg:
-        _result += str(m)
+    _result += ' '.join([ str(m) for m in msg])
     _result += end if end else ''
     print(*msg, end=end)
 
