@@ -1,4 +1,5 @@
 from ..common import *
+import itertools
 
 def main():
     data = readFasta(getProblemPath(__file__))
@@ -11,7 +12,7 @@ def main():
     for intron in introns:
         s = s.removeIntron(intron)
 
-    proteins = findProteins(s.translated())
+    proteins = itertools.chain(*[findProteins(frame) for frame in genReadingFrames(s.translated())])
     result = ''
     for protein in proteins:
         if len(protein) > len(result):
